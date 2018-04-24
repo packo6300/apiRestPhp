@@ -9,7 +9,7 @@ require __DIR__ . '/../src/Querys.php';
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
     // Sample log message
-    $this->logger->info("Slim-Skeleton '/' route");
+    $this->logger->info("index '/' route");
     return $this->renderer->render($response, 'index.phtml', $args);
 });
 
@@ -21,20 +21,31 @@ $app->group('/clientes', function () use ($app) {
            try{
                $db= new Db();
                $result=$db->query(GET_CLIENTS,array(":company"=>'ATP'));
+               $this->logger->info("clientes Request :".$request." Response: ".$response);
+               echo json_encode($result);            
+           }
+           catch (PDOException $e){
+               echo $e->getMessage();
+           }
+        });
+        /**
+         * Obtiene loo detalles de un cliente segun su clave
+         * @example clientes/cliente/C000000250 resgresara un arreglo con los datos del cliente
+         * @return array con los datos de cada cliente[clave,nombre,direccion,RecIdDireccion,Sitio,Almacen,CondEntrega,MetodoPago,Bloqueo,ModoEntrega]
+         */
+        $app->get('/cliente/[{clave}]',  function (Request $request, Response $response, array $args){
+           try{
+               $db= new Db();
+               $result=$db->query(GET_CLIENTS_BY_CLAVE,array(":clave"=>$args['clave']));
+               $this->logger->info("cliente Request :".json_encode($request)." Response: ".$response);
                echo json_encode($result);            
            }
            catch (PDOException $e){
                echo $e->getMessage();
            }
        });
-        $app->get('/clientes/[{clave}]',  function (Request $request, Response $response, array $args){
-           try{
-               $db= new Db();
-               $result=$db->query(GET_CLIENTS_BY_CLAVE,array(":clave"=>$args['clave']));
-               echo json_encode($result);            
-           }
-           catch (PDOException $e){
-               echo $e->getMessage();
-           }
+       $app->post('/crear',  function (Request $request, Response $response, array $args){
+            $emp = json_decode($request->getBody());
+            echo json_encode($emp);
        });
 });
