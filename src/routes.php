@@ -21,7 +21,7 @@ $app->group('/clientes', function () use ($app) {
            try{
                $db= new Db();
                $result=$db->query(GET_CLIENTS,array(":company"=>'ATP'));
-               $this->logger->info("clientes Request :".$request." Response: ".$response);
+               $this->logger->info("clientes Request :".json_encode($request)." Response: ".$response);
                echo json_encode($result);            
            }
            catch (PDOException $e){
@@ -47,5 +47,10 @@ $app->group('/clientes', function () use ($app) {
        $app->post('/crear',  function (Request $request, Response $response, array $args){
             $emp = json_decode($request->getBody());
             echo json_encode($emp);
+       });
+       $app->put('/actualizar/{id}',  function (Request $request, Response $response, array $args){
+            //$emp = json_decode($request->getBody());
+            //echo json_encode($args['id']);
+           echo $request->getBody();
        });
 });
