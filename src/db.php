@@ -39,7 +39,7 @@ class Db{
             return $result ;
         }
         catch (PDOException $e){
-            return $e;
+            throw new Exception($e->getMessage());
         }
     }
 }

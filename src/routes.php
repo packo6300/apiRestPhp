@@ -13,11 +13,18 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
     return $this->renderer->render($response, 'index.phtml', $args);
 });
 
+$app->group('/notificacion', function () use ($app) {
+    $app->get('/create/[{user}]',  function (Request $request, Response $response, array $args){
+        
+        return $args['user'];
+    });
+});
+
 $app->group('/clientes', function () use ($app) {
         /**
         * obtiene la lista de clientes
         */        
-       $app->get('/clientes',  function (Request $request, Response $response, array $args){
+        $app->get('/clientes',  function (Request $request, Response $response, array $args){
            try{
                $db= new Db();
                $result=$db->query(GET_CLIENTS,array(":company"=>'ATP'));
@@ -29,7 +36,7 @@ $app->group('/clientes', function () use ($app) {
            }
         });
         /**
-         * Obtiene loo detalles de un cliente segun su clave
+         * Obtiene los detalles de un cliente segun su clave
          * @example clientes/cliente/C000000250 resgresara un arreglo con los datos del cliente
          * @return array con los datos de cada cliente[clave,nombre,direccion,RecIdDireccion,Sitio,Almacen,CondEntrega,MetodoPago,Bloqueo,ModoEntrega]
          */
@@ -49,8 +56,7 @@ $app->group('/clientes', function () use ($app) {
             echo json_encode($emp);
        });
        $app->put('/actualizar/{id}',  function (Request $request, Response $response, array $args){
-            //$emp = json_decode($request->getBody());
-            //echo json_encode($args['id']);
-           echo $request->getBody();
+            $emp = json_decode($request->getBody());
+            echo $request->getBody();
        });
 });
